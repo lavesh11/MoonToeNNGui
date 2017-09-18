@@ -12,7 +12,7 @@ PLAYER_X = 1
 PLAYER_O = -1
 DRAW = 2
 
-BOARD_SIZE = 10
+BOARD_SIZE = 15
 LINE_SIZE = 5
 
 NAMES = {0: '_', 1: 'X', -1: 'O'}
@@ -105,7 +105,7 @@ def flat_move_to_tuple(move_index):
     return int(move_index / BOARD_SIZE), move_index % BOARD_SIZE
 
 def tuple_move_to_flat(tuple_move):
-    return tuple_move[0]*10 + tuple_move[1]
+    return tuple_move[0]*BOARD_SIZE + tuple_move[1]
 
 def apply_move(board_state, move, side):
     move_x, move_y = move
@@ -263,13 +263,36 @@ class Agent(object):
                     positions.append((val,(i,j)))
         positions = sorted(positions, key=lambda tup: tup[0], reverse=True)
         #random_index = random.randrange(0, min(2,len(positions)))
+        elements = []
+        elements.append([])
+        elements[0].append(positions[0][1])
+        x = 0
+        if len(positions)>1:
+            for i in range(1,len(positions)):
+                if math.fabs(positions[i][0]-positions[i-1][0]) < 1e-5:
+                    elements[x].append(positions[i][1])
+                else:
+                    x+=1
+                    elements.append([])
+                    elements[x].append(positions[i][1])
+        x+=1
+        #print 'number ',x
+        #print 'length ',len(elements[0])
+        '''    
         if len(positions) >= 3:
             # initially trained on p=[0.65, 0.25, 0.1] , p=[0.8, 0.15, 0.05] p=[0.8, 0.05, 0.05, 0.05, 0.05])
-            random_index = numpy.random.choice(numpy.arange(0, 3), p=[0.8, 0.15, 0.05])
+            random_index = numpy.random.choice(numpy.arange(0, 3), p=[0.85, 0.1, 0.05])
         else:
             random_index = random.randrange(0, min(3, len(positions)))
         return positions[random_index][1]
+        '''
+        if x >= 3:
+            random_index = numpy.random.choice(numpy.arange(0, 3), p=[0.85, 0.1, 0.05])
+        else:
+            random_index = random.randrange(0, x)
 
+        #print 'random index ',random_index
+        return elements[random_index][random.randrange(0, len(elements[random_index]))]
     def possible(self, state):
         line = collections.defaultdict(lambda: 0)
         line.clear()
@@ -367,12 +390,14 @@ class Human(object):
         return move
 
 import numpy
-
+import time
 if __name__ == '__main__':
 
     count = set()
-    for episode in range(30):
+    for episode in range(1,10):
+        #print episode
         if bool(random.getrandbits(1)):
+            print 'computer goes first'
             board_state = emptyboard()
             side = 1
             while True:
@@ -393,7 +418,8 @@ if __name__ == '__main__':
                     break
 
                 board_state = apply_move(board_state, move, side)
-                # print board_state
+                #printboard(board_state)
+                #time.sleep(1)
 
                 winner = gameover(board_state)
                 if winner != 0 and winner != 2:
@@ -402,7 +428,7 @@ if __name__ == '__main__':
             count.add(tuple(np.array(board_state).ravel()))
             printboard(board_state)
         else:
-            # print 'player goes first'
+            print 'player goes first'
             board_state = emptyboard()
             side = -1
             while True:
@@ -422,7 +448,8 @@ if __name__ == '__main__':
                     break
 
                 board_state = apply_move(board_state, move, side)
-                # print board_state
+                #printboard(board_state)
+                #time.sleep(1)
 
                 winner = gameover(board_state)
                 if winner != 0 and winner != 2:
@@ -430,5 +457,6 @@ if __name__ == '__main__':
                 side = -side
             count.add(tuple(np.array(board_state).ravel()))
             printboard(board_state)
+            time.sleep(2)
         if episode%100 == 0:
             print episode, len(count)

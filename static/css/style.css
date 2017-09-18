@@ -7,7 +7,7 @@
     font-size: 20px;
     font-family: Aria, Helvetica, sans-serif;
     font-weight: bold;
-    border: 2px solid #ddd;
+    border: 1px solid #ddd;
 }
 
 .board {
@@ -15,8 +15,8 @@
     margin-right: auto;
     position: relative;
     overflow: hidden;
-    width: 250px;
-    height: 250px;
+    width: 400px;
+    height: 400px;
 }
 
 .cell:hover {
@@ -42,7 +42,7 @@
     background-color: gray;
     opacity: 0.075;
     height: 100%;
-    width: 250px;
+    width: 400px;
     position: absolute;
     top: 0;
     left: 0;
@@ -69,6 +69,7 @@
 }
 
 .btn:hover {
+    /*background-color: #6BB2EA !important;*/
     background-color: #6BB2EA !important;
 }
 

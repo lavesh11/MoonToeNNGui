@@ -7,21 +7,26 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
     $scope.game_over = false;
     $scope.chance = true;
     $scope.message = '';
-    $scope.winning = [[], [], [], [], [], [], [], [] ,[] ,[]];
+    $scope.winning = [[], [], [], [], [], [], [], [] ,[] ,[], [], [], [] ,[] ,[]];
     $scope.score_player = 0;
     $scope.score_computer = 0;
 
     $scope.blank_board = [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
     ];
 
     $scope.board = angular.copy($scope.blank_board);
@@ -85,7 +90,7 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
         $scope.board = angular.copy($scope.blank_board);
         $scope.game_over = false;
         $scope.message = '';
-        $scope.winning = [[], [], [], [], [], [], [], [] ,[] ,[]];
+        $scope.winning = [[], [], [], [], [], [], [], [] ,[] ,[], [], [], [] ,[] ,[]];
         $scope.new_game = true;
         $scope.chance = true;
     };
@@ -120,12 +125,12 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
         var total_zero = 0;
         var ct;
-        for (var r = 0; r < 10; r++) {
-            for (var c = 0; c < 10; c++) {
+        for (var r = 0; r < 15; r++) {
+            for (var c = 0; c < 15; c++) {
                 // horizontal
                 ct = 0;
                 if ($scope.board[r][c] === ' ') total_zero++;
-                for (var k = 0; k < 5 && c+k < 10; ++k) {
+                for (var k = 0; k < 5 && c+k < 15; ++k) {
                     if($scope.board[r][c+k] === mark) {
                         ct++;
                     }
@@ -141,7 +146,7 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
                 // vertical
                 ct = 0;
-                for (var k = 0; k < 5 && r+k < 10; ++k) {
+                for (var k = 0; k < 5 && r+k < 15; ++k) {
                     if($scope.board[r+k][c] === mark) {
                         ct++;
                     }
@@ -157,7 +162,7 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
                 // diagonal
                 ct = 0;
-                for (var k = 0; k < 5 && r+k < 10 && c+k < 10; ++k) {
+                for (var k = 0; k < 5 && r+k < 15 && c+k < 15; ++k) {
                     if($scope.board[r+k][c+k] === mark) {
                         ct++;
                     }
@@ -172,7 +177,7 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
                 }
 
                 ct = 0;
-                for (var k = 0; k < 5 && r+k < 10 && c-k >= 0; ++k) {
+                for (var k = 0; k < 5 && r+k < 15 && c-k >= 0; ++k) {
                     if($scope.board[r+k][c-k] === mark) {
                         ct++;
                     }
@@ -195,8 +200,8 @@ app.controller('MainController', ['$scope', '$http', function($scope, $http) {
 
 
     var is_board_full = function() {
-        for (var r = 0; r < 10; r++) {
-            for (var c = 0; c < 10; c++) {
+        for (var r = 0; r < 15; r++) {
+            for (var c = 0; c < 15; c++) {
                 if ($scope.board[r][c] === ' ') {
                     return false;
                 }
