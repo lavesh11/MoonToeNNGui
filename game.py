@@ -10,7 +10,7 @@ PLAYER_X = 1
 PLAYER_O = -1
 DRAW = 2
 
-BOARD_SIZE = 10
+BOARD_SIZE = 15
 LINE = 5
 
 NAMES = {0: '-', 1: 'X', -1: 'O'}

@@ -8,24 +8,32 @@ from network_helpers import create_network
 
 app = Flask(__name__)
 
-input_layer, output_layer, variables = create_network(11, (100, 100, 100, 100, 100), output_nodes=1,output_softmax=False)
+input_layer, output_layer, variables = create_network(11, (10, 10, 10, 10, 10), output_nodes=1,output_softmax=False)
 def action1(board_state):
     with tf.Session() as session:
         session.run(tf.initialize_all_variables())
-        load_network(session, variables, 'MoonGo_reinforcement.pickle')
+        load_network(session, variables, 'batch2.pickle')
         positions = []
         for i in range(BOARD_SIZE):
             for j in range(BOARD_SIZE):
                 if board_state[i][j] == 0:
                     board_state[i][j] = -1
+                    if (abs(gameover(board_state)) == 1):
+                        move = (i,j)
+                        board_state[i][j] = 0
+                        return move
                     ol = session.run(output_layer, feed_dict={input_layer: np.array(state_key(board_state,1)).reshape(1, 11)})
                     positions.append((ol,(i,j)))
                     board_state[i][j] = 0
         positions = sorted(positions, key=lambda tup: tup[0])
         minval = 999999
         move = None
-        for x in range(min(3,len(positions))):
+        for x in range(min(5,len(positions))):
             board_state[positions[x][1][0]][positions[x][1][1]] = -1
+            if abs(gameover(board_state))==1:
+                board_state[positions[x][1][0]][positions[x][1][1]] = 0
+                move = positions[x][1]
+                return move
             print (positions[x][1][0],positions[x][1][1])
             minval1 = -999999
             move1 = None
@@ -33,6 +41,10 @@ def action1(board_state):
                 for j in range(BOARD_SIZE):
                     if board_state[i][j] == 0:
                         board_state[i][j] = 1
+                        if (abs(gameover(board_state)) == 1):
+                            move = (i,j)
+                            board_state[positions[x][1][0]][positions[x][1][1]] = 0
+                            return move
                         ol = session.run(output_layer, feed_dict={input_layer: np.array(state_key(board_state,-1)).reshape(1, 11)})
                         #print (i,j), ol
                         if ol > minval1:
@@ -177,10 +189,10 @@ def move():
 
     if chance:
         #print 'Using O pickle'
-        computer_move = easy(state)
+        computer_move = action1(state)
     else:
         #print 'Using O pickle'
-        computer_move = easy(state)
+        computer_move = action1(state)
 
     #print computer_move,computer
     # Make the next move
