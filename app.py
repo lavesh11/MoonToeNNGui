@@ -63,8 +63,13 @@ def easy(board_state):
 
         minval = 999999
         move = None
+        for x in range(10):
+            print positions[x][0], ' co-ordinate ',positions[x][1]
+        print '--------------------------------------------'
         for x in range(min(5,len(positions))):
             board_state[positions[x][1][0]][positions[x][1][1]] = -1
+            if (abs(gameover(board_state))==1):
+                return positions[x][1]
             print (positions[x][1][0],positions[x][1][1]), 'val ',positions[x][0]
             minval1 = -999999
             move1 = None
@@ -72,6 +77,8 @@ def easy(board_state):
                 for j in range(BOARD_SIZE):
                     if board_state[i][j] == 0:
                         board_state[i][j] = 1
+                        if (abs(gameover(board_state)) == 1):
+                            return (i,j)
                         ol = session.run(output_layer, feed_dict={input_layer: np.array(state_key(board_state,-1)).reshape(1, 11)})
                         if ol > minval1:
                             print (i, j), ol
@@ -79,11 +86,12 @@ def easy(board_state):
                             move1 = (i,j)
                         board_state[i][j] = 0
             board_state[positions[x][1][0]][positions[x][1][1]] = 0
-            print 'minval1 ',minval1, ' move1 ',move1
+            #print 'minval1 ',minval1, ' move1 ',move1
             if math.fabs(minval1+1) < minval:
                 move = (positions[x][1][0],positions[x][1][1])
                 minval = math.fabs(minval1+1)
-        print 'cur ',positions[0][1], ' can ', move
+        #print 'cur ',positions[0][1], ' can ', move
+        print '*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*'
         return move
 
 def easy1(board_state):
@@ -123,43 +131,6 @@ def easy1(board_state):
                 minval = math.fabs(minval1+1)
         return move
 
-
-def action2(board_state):
-    with tf.Session() as session:
-        session.run(tf.initialize_all_variables())
-        load_network(session, variables, 'MoonGo_reinforcement.pickle')
-        positions = []
-        for i in range(BOARD_SIZE):
-            for j in range(BOARD_SIZE):
-                if board_state[i][j] == 0:
-                    board_state[i][j] = -1
-                    ol = session.run(output_layer, feed_dict={input_layer: np.array(state_key(board_state,1)).reshape(1, 11)})
-                    positions.append((ol,(i,j)))
-                    board_state[i][j] = 0
-        positions = sorted(positions, key=lambda tup: tup[0])
-        minval = 999999
-        move = None
-        for x in range(min(3,len(positions))):
-            board_state[positions[x][1][0]][positions[x][1][1]] = -1
-            print (positions[x][1][0],positions[x][1][1])
-            minval1 = -999999
-            move1 = None
-            for i in range(BOARD_SIZE):
-                for j in range(BOARD_SIZE):
-                    if board_state[i][j] == 0:
-                        board_state[i][j] = 1
-                        ol = session.run(output_layer, feed_dict={input_layer: np.array(state_key(board_state,-1)).reshape(1, 11)})
-                        #print (i,j), ol
-                        if ol > minval1:
-                            minval1 = ol
-                            move1 = (i,j)
-                        board_state[i][j] = 0
-            board_state[positions[x][1][0]][positions[x][1][1]] = 0
-            print 'minval1 ',minval1, ' move1 ',move1
-            if minval1 < minval:
-                move = (positions[x][1][0],positions[x][1][1])
-                minval = minval1
-        return move
 
 @app.route('/')
 def index():
